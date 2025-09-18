@@ -38,25 +38,7 @@ variable "thing_group_child_name" {
   default = null
 }
 
-variable "is_child" {
-  type    = bool
-  default = false
-}
 
-variable "thing_attributes" {
-  type = list(object({
-    key   = string
-    value = string
-    }
-    )
-  )
-  default = null
-}
-
-variable "item" {
-  type    = number
-  default = 0
-}
 
 variable "description" {
   type    = string
@@ -64,12 +46,12 @@ variable "description" {
 }
 
 # Things
-variable "things_name" {
+variable "things_base_name" {
   type    = string
   default = ""
 }
 
-variable "things_number" {
+variable "things_amount" {
   type    = number
   default = 0
 }
