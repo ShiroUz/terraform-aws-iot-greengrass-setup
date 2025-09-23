@@ -1,18 +1,12 @@
-
-
-resource "aws_iot_thing_group" "parent" {
-  name = var.thing_group_parent_name
-}
-
+# Parent Thing Group is created another module
+# Child Thing Group is created here
 resource "aws_iot_thing_group" "child" {
   name              = var.thing_group_child_name
-  parent_group_name = aws_iot_thing_group.parent.name
+  parent_group_name = var.thing_group_parent_name
 
   properties {
     attribute_payload {
-      attributes = {
-        One = "11111"
-      }
+      attributes = var.thing_group_attributes
     }
     description = var.description
   }

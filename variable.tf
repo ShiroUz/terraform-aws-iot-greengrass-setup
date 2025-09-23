@@ -38,7 +38,19 @@ variable "thing_group_child_name" {
   default = null
 }
 
-
+variable "thing_group_attributes" {
+  type        = map(string)
+  default     = {}
+  description = "Key-value pairs for Thing Group attributes"
+  
+  # Example:
+  # thing_group_attributes = {
+  #   Environment = "production"
+  #   Team        = "iot-team"
+  #   Project     = "greengrass-poc"
+  #   Version     = "1.0.0"
+  # }
+}
 
 variable "description" {
   type    = string
@@ -65,8 +77,6 @@ variable "secret_version" {
   type    = number
   default = 1
 }
-
-
 
 # env
 variable "region" {
