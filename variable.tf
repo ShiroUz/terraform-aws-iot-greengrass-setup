@@ -28,7 +28,7 @@ variable "thing_group_attributes" {
   type        = map(string)
   default     = {}
   description = "Key-value pairs for Thing Group attributes"
-  
+
   # Example:
   # thing_group_attributes = {
   #   Environment = "production"

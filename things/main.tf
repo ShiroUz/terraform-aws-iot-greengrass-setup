@@ -2,7 +2,7 @@ data "aws_caller_identity" "self" {}
 
 # IoT Things
 resource "aws_iot_thing" "this" {
-  name = var.things_name
+  name            = var.things_name
   thing_type_name = var.things_type_name
 }
 
@@ -22,21 +22,21 @@ resource "aws_iot_certificate" "this" {
 #   /<env>/<thing_name>/private
 #   /<env>/<thing_name>/certificate
 resource "aws_ssm_parameter" "public_key" {
-  name             = "/${var.env}/${var.things_name}/public"
-  type             = "SecureString"
-  value            = aws_iot_certificate.this.public_key
+  name  = "/${var.env}/${var.things_name}/public"
+  type  = "SecureString"
+  value = aws_iot_certificate.this.public_key
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  name             = "/${var.env}/${var.things_name}/private"
-  type             = "SecureString"
-  value            = aws_iot_certificate.this.private_key
+  name  = "/${var.env}/${var.things_name}/private"
+  type  = "SecureString"
+  value = aws_iot_certificate.this.private_key
 }
 
 resource "aws_ssm_parameter" "certificate_pem" {
-  name             = "/${var.env}/${var.things_name}/certificate"
-  type             = "SecureString"
-  value            = aws_iot_certificate.this.certificate_pem
+  name  = "/${var.env}/${var.things_name}/certificate"
+  type  = "SecureString"
+  value = aws_iot_certificate.this.certificate_pem
 }
 
 # IoT Policy(For Connection to AWS IoT Core)
@@ -100,13 +100,13 @@ data "aws_iam_policy_document" "iot_base_policy" {
   # }
 
   # Connect for Greengrass
-   statement {
+  statement {
     effect = "Allow"
     actions = [
       "iot:AssumeRoleWithCertificate",
     ]
     resources = ["arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:rolealias/${var.things_name}-alias"]
-  } 
+  }
 }
 
 resource "aws_iot_policy_attachment" "this" {
@@ -197,7 +197,7 @@ resource "aws_iam_policy" "extra_greengrass_core_policy" {
 }
 
 data "aws_iam_policy_document" "extra_policy" {
-  count =  var.extra_policy_statement != null ? 1 : 0
+  count = var.extra_policy_statement != null ? 1 : 0
   dynamic "statement" {
     for_each = var.extra_policy_statement != null ? var.extra_policy_statement : []
     content {
@@ -209,7 +209,7 @@ data "aws_iam_policy_document" "extra_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "extra_policy" {
-  count =  var.extra_policy_statement != null ? 1 : 0
+  count      = var.extra_policy_statement != null ? 1 : 0
   role       = aws_iam_role.role.name
   policy_arn = aws_iam_policy.extra_greengrass_core_policy.arn
 }
