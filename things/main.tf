@@ -126,7 +126,7 @@ resource "aws_iam_role" "role" {
 }
 resource "aws_iot_role_alias" "this" {
   alias               = "${var.things_name}-alias"
-  role_arn            = aws_iam_role.role[0].arn
+  role_arn            = aws_iam_role.role.arn
   credential_duration = var.credential_duration
 }
 
@@ -185,7 +185,7 @@ resource "aws_iam_policy" "greengrass_core_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-  role       = aws_iam_role.role[0].name
+  role       = aws_iam_role.role.name
   policy_arn = aws_iam_policy.greengrass_core_policy[0].arn
 }
 
@@ -209,6 +209,6 @@ data "aws_iam_policy_document" "extra_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "extra_policy" {
-  role       = aws_iam_role.role[0].name
-  policy_arn = aws_iam_policy.extra_greengrass_core_policy[0].arn
+  role       = aws_iam_role.role.name
+  policy_arn = aws_iam_policy.extra_greengrass_core_policy.arn
 }
