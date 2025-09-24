@@ -16,7 +16,7 @@ module "things" {
   source = "./things"
   count  = var.things_amount
 
-  things_name                 = "${var.things_base_name}-${count.index}"
+  things_name                 = "${var.things_base_name}-${count.index}-thing"
   things_type_name            = var.things_type_name
   thing_group_child_arn       = aws_iot_thing_group.child.arn
   region                      = var.region
