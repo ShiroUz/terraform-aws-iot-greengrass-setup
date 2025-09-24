@@ -24,4 +24,6 @@ module "things" {
   credential_duration         = var.credential_duration
   component_artifact_location = var.component_artifact_location
   extra_policy_statement      = var.extra_policy_statement
+
+  depends_on = [ aws_iot_thing_group.child ]
 }
