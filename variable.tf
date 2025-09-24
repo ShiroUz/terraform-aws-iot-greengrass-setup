@@ -93,8 +93,3 @@ variable "account_name" {
   type    = string
   default = "123456789"
 }
-
-variable "enable_greengrass" {
-  type    = bool
-  default = false
-}
