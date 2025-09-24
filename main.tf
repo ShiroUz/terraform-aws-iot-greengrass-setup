@@ -16,10 +16,10 @@ module "things" {
   source = "./things"
   count  = var.things_amount
 
-  things_name = "${var.things_base_name}-${count.index}"
+  things_name                 = "${var.things_base_name}-${count.index}"
+  things_type_name            = var.things_type_name
   thing_group_child_arn       = aws_iot_thing_group.child.arn
   region                      = var.region
-  account_name                = var.account_name
   env                         = var.env
   credential_duration         = var.credential_duration
   component_artifact_location = var.component_artifact_location

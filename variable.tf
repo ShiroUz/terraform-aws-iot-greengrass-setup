@@ -1,24 +1,10 @@
 # Role Alias
-variable "role_alias_name" {
-  type    = string
-  default = null
-}
 variable "credential_duration" {
   type    = number
   default = 3600
 }
 
 variable "component_artifact_location" {
-  type    = string
-  default = null
-}
-
-variable "role_name" {
-  type    = string
-  default = null
-}
-
-variable "policy_name" {
   type    = string
   default = null
 }
@@ -68,14 +54,9 @@ variable "things_amount" {
   default = 0
 }
 
-variable "things_type" {
+variable "things_type_name" {
   type    = string
   default = null
-}
-
-variable "secret_version" {
-  type    = number
-  default = 1
 }
 
 # env
@@ -87,9 +68,4 @@ variable "region" {
 variable "env" {
   type    = string
   default = "dev"
-}
-
-variable "account_name" {
-  type    = string
-  default = "123456789"
 }

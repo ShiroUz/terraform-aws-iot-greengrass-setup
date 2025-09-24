@@ -1,6 +1,9 @@
+data "aws_caller_identity" "self" {}
+
 # IoT Things
 resource "aws_iot_thing" "this" {
   name = var.things_name
+  thing_type_name = var.things_type_name
 }
 
 # Thing Group Membership
@@ -45,16 +48,16 @@ resource "aws_iot_policy" "this" {
 data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions   = ["iot:Connect"]
-    resources = ["arn:aws:iot:${var.region}:${var.account_name}:client/${var.things_name}"]
+    resources = ["arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:client/${var.things_name}"]
     effect    = "Allow"
   }
 
   # statement {
   #   actions = ["iot:Publish"]
   #   resources = [
-  #     "arn:aws:iot:${var.region}:${var.account_name}:topic/cmd/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${var.account_name}:topic/data/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${var.account_name}:topic/$aws/things/${var.things_name}/shadow/*",
+  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/cmd/*/${var.things_name}*",
+  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/data/*/${var.things_name}*",
+  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
   #   ]
   #   effect = "Allow"
   # }
@@ -62,7 +65,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = ["iot:Receive"]
     resources = [
-      "arn:aws:iot:${var.region}:${var.account_name}:topic/$aws/things/${var.things_name}/shadow/*",
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
     ]
     effect = "Allow"
   }
@@ -70,8 +73,8 @@ data "aws_iam_policy_document" "iot_base_policy" {
   # statement {
   #   actions = ["iot:Subscribe"]
   #   resources = [
-  #     "arn:aws:iot:${var.region}:${var.account_name}:topicfilter/cmd/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${var.account_name}:topicfilter/$aws/things/${var.things_name}/shadow/*",
+  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/cmd/*/${var.things_name}*",
+  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/$aws/things/${var.things_name}/shadow/*",
   #   ]
   #   effect = "Allow"
   # }
@@ -79,7 +82,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = ["iot:UpdateThingShadow"]
     resources = [
-      "arn:aws:iot:${var.region}:${var.account_name}:thing/${var.things_name}*"
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:thing/${var.things_name}*"
     ]
     effect = "Allow"
   }
@@ -102,7 +105,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
     actions = [
       "iot:AssumeRoleWithCertificate",
     ]
-    resources = ["arn:aws:iot:${var.region}:${var.account_name}:rolealias/${var.role_alias_name}"]
+    resources = ["arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:rolealias/${var.things_name}-alias"]
   } 
 }
 
@@ -177,7 +180,7 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
 }
 
 resource "aws_iam_policy" "greengrass_core_policy" {
-  name   = var.policy_name
+  name   = "${var.things_name}-policy"
   policy = data.aws_iam_policy_document.greengrass_core_policy[0].json
 }
 

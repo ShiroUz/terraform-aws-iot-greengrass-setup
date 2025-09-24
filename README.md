@@ -48,16 +48,10 @@ module "iot_greengrass" {
   things_amount    = 3
 
   # Greengrass configuration
-  enable_greengrass           = true
-  role_alias_name             = "greengrass-role-alias"
   component_artifact_location = "arn:aws:s3:::my-greengrass-bucket"
-  role_name                   = "greengrass-role"
-  policy_name                 = "greengrass-policy"
-
   # Environment configuration
-  region       = "ap-northeast-1"
-  env          = "prod"
-  account_name = "123456789012"
+  region = "ap-northeast-1"
+  env    = "prod"
 }
 ```
 
@@ -104,7 +98,6 @@ module "iot_greengrass" {
 |----------|------|---------|-------------|
 | `region` | string | "us-east-1" | AWS region |
 | `env` | string | "dev" | Environment name |
-| `account_name` | string | "123456789" | AWS account ID |
 
 ## Outputs
 

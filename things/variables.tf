@@ -2,15 +2,16 @@ variable "things_name" {
   type = string
 }
 
+variable "things_type_name" {
+  type    = string
+  default = null
+}
+
 variable "thing_group_child_arn" {
   type = string
 }
 
 variable "region" {
-  type = string
-}
-
-variable "account_name" {
   type = string
 }
 
