@@ -122,7 +122,7 @@ resource "aws_iot_thing_principal_attachment" "this" {
 # Greengrass Core Role & Role Alias
 resource "aws_iam_role" "role" {
   name               = "${var.things_name}-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role[0].json
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 resource "aws_iot_role_alias" "this" {
   alias               = "${var.things_name}-alias"
@@ -181,7 +181,7 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
 
 resource "aws_iam_policy" "greengrass_core_policy" {
   name   = "${var.things_name}-policy"
-  policy = data.aws_iam_policy_document.greengrass_core_policy[0].json
+  policy = data.aws_iam_policy_document.greengrass_core_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
