@@ -11,9 +11,9 @@ output "certificate_arn" {
 }
 
 output "role_alias_arn" {
-  value = var.things_number == 0 ? aws_iot_role_alias.this[0].arn : null
+  value = aws_iot_role_alias.this.arn
 }
 
 output "iam_role_arn" {
-  value = var.things_number == 0 ? aws_iam_role.role[0].arn : null
+  value = aws_iam_role.role.arn
 }
