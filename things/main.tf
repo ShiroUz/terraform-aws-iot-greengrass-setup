@@ -193,7 +193,7 @@ resource "aws_iam_role_policy_attachment" "this" {
 resource "aws_iam_policy" "extra_greengrass_core_policy" {
   count  = var.extra_policy_statement != null ? 1 : 0
   name   = "${var.things_name}-extra-policy"
-  policy = data.aws_iam_policy_document.extra_policy[0].json
+  policy = data.aws_iam_policy_document.extra_policy.json
 }
 
 data "aws_iam_policy_document" "extra_policy" {
