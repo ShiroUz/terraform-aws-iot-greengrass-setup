@@ -193,7 +193,7 @@ resource "aws_iam_role_policy_attachment" "this" {
 resource "aws_iam_policy" "extra_greengrass_core_policy" {
   count  = var.extra_policy_statement != null ? 1 : 0
   name   = "${var.things_name}-extra-policy"
-  policy = data.aws_iam_policy_document.extra_policy.json
+  policy = data.aws_iam_policy_document.extra_policy[0].json
 }
 
 data "aws_iam_policy_document" "extra_policy" {
@@ -211,5 +211,5 @@ data "aws_iam_policy_document" "extra_policy" {
 resource "aws_iam_role_policy_attachment" "extra_policy" {
   count      = var.extra_policy_statement != null ? 1 : 0
   role       = aws_iam_role.role.name
-  policy_arn = aws_iam_policy.extra_greengrass_core_policy.arn
+  policy_arn = aws_iam_policy.extra_greengrass_core_policy[0].arn
 }
