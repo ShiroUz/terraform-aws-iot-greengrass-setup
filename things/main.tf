@@ -52,15 +52,13 @@ data "aws_iam_policy_document" "iot_base_policy" {
     effect    = "Allow"
   }
 
-  # statement {
-  #   actions = ["iot:Publish"]
-  #   resources = [
-  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/cmd/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/data/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
-  #   ]
-  #   effect = "Allow"
-  # }
+  statement {
+    actions = ["iot:Publish"]
+    resources = [
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
+    ]
+    effect = "Allow"
+  }
 
   statement {
     actions = ["iot:Receive"]
@@ -70,14 +68,13 @@ data "aws_iam_policy_document" "iot_base_policy" {
     effect = "Allow"
   }
 
-  # statement {
-  #   actions = ["iot:Subscribe"]
-  #   resources = [
-  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/cmd/*/${var.things_name}*",
-  #     "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/$aws/things/${var.things_name}/shadow/*",
-  #   ]
-  #   effect = "Allow"
-  # }
+  statement {
+    actions = ["iot:Subscribe"]
+    resources = [
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/$aws/things/${var.things_name}/shadow/*",
+    ]
+    effect = "Allow"
+  }
 
   statement {
     actions = ["iot:UpdateThingShadow"]
