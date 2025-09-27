@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = ["iot:Publish"]
     resources = [
-      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/*",
     ]
     effect = "Allow"
   }
@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = ["iot:Receive"]
     resources = [
-      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/shadow/*",
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topic/$aws/things/${var.things_name}/*",
     ]
     effect = "Allow"
   }
@@ -71,7 +71,8 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = ["iot:Subscribe"]
     resources = [
-      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/$aws/things/${var.things_name}/shadow/*",
+      "arn:aws:iot:${var.region}:${data.aws_caller_identity.self.account_id}:topicfilter/$aws/things/${var.things_name}/*",
+
     ]
     effect = "Allow"
   }
