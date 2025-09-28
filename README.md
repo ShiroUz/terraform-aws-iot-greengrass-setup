@@ -153,7 +153,3 @@ Latest release information can be found at [Releases](https://github.com/your-or
 - Setting `things_amount` to 0 will not create any Thing-related resources
 - Always specify a tag or commit hash when referencing Git repositories
 - After HCP Terraform Registry registration, use version constraints to prevent unexpected changes
-
-## ライセンス
-
-MIT License
