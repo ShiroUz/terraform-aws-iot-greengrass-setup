@@ -85,17 +85,13 @@ data "aws_iam_policy_document" "iot_base_policy" {
     effect = "Allow"
   }
 
-  # statement {
-  #   actions = [
-  #     "iot:Publish",
-  #     "iot:Subscribe",
-  #     "iot:Receive",
-  #     "iot:Connect",
-  #     "greengrass:*",
-  #   ]
-  #   resources = ["*"]
-  #   effect    = "Allow"
-  # }
+  statement {
+    actions = [
+      "greengrass:ResolveComponentCandidates",
+    ]
+    resources = ["*"]
+    effect    = "Allow"
+  }
 
   # Connect for Greengrass
   statement {
@@ -163,7 +159,6 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
       "greengrass:ListInstalledComponents",
       "greengrass:GetDeploymentConfiguration",
       "greengrass:GetComponentVersionArtifact",
-      "greengrass:ResolveComponentCandidates",
     ]
     resources = ["*"]
   }
