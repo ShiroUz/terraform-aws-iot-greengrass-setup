@@ -93,14 +93,6 @@ data "aws_iam_policy_document" "iot_base_policy" {
     resources = ["*"]
     effect    = "Allow"
   }
-# Greengrass Deployment
-  statement {
-    effect = "Allow"
-    actions =[
-      "ecr:GetAuthorizationToken",
-    ]
-    resources = ["*"]
-  }
 
   # Connect for Greengrass
   statement {
@@ -171,6 +163,16 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
     ]
     resources = ["*"]
   }
+  
+# Greengrass Deployment
+  statement {
+    effect = "Allow"
+    actions =[
+      "ecr:GetAuthorizationToken",
+    ]
+    resources = ["*"]
+  }
+
   statement {
     effect = "Allow"
     actions = [
