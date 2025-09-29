@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
     ]
     effect = "Allow"
   }
-
+    # Greengrass Deployment
   statement {
     actions = [
       "greengrass:ResolveComponentCandidates",
@@ -92,6 +92,14 @@ data "aws_iam_policy_document" "iot_base_policy" {
     ]
     resources = ["*"]
     effect    = "Allow"
+  }
+# Greengrass Deployment
+  statement {
+    effect = "Allow"
+    actions =[
+      "ecr:GetAuthorizationToken",
+    ]
+    resources = ["*"]
   }
 
   # Connect for Greengrass
