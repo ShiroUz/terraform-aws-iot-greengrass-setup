@@ -163,6 +163,7 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
       "greengrass:ListInstalledComponents",
       "greengrass:GetDeploymentConfiguration",
       "greengrass:GetComponentVersionArtifact",
+      "greengrass:ResolveComponentCandidates",
     ]
     resources = ["*"]
   }
