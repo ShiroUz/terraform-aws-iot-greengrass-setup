@@ -88,6 +88,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
   statement {
     actions = [
       "greengrass:ResolveComponentCandidates",
+      "greengrass:GetComponentVersionArtifact",
     ]
     resources = ["*"]
     effect    = "Allow"
