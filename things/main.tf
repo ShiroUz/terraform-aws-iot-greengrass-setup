@@ -163,12 +163,13 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
     ]
     resources = ["*"]
   }
-  
+
 # Greengrass Deployment
   statement {
     effect = "Allow"
     actions =[
       "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
     ]
     resources = ["*"]
   }
