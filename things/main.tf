@@ -170,6 +170,7 @@ data "aws_iam_policy_document" "greengrass_core_policy" {
     actions =[
       "ecr:GetAuthorizationToken",
       "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
     ]
     resources = ["*"]
   }
