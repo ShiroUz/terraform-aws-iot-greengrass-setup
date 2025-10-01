@@ -9,6 +9,11 @@ variable "component_artifact_location" {
   default = null
 }
 
+variable "extra_iot_policy_statement" {
+  type    = any
+  default = null
+}
+
 variable "extra_policy_statement" {
   type    = any
   default = null
