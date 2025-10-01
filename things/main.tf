@@ -115,6 +115,30 @@ resource "aws_iot_thing_principal_attachment" "this" {
   thing     = aws_iot_thing.this.name
 }
 
+# IoT Policy Extra Policy Statement
+data "aws_iam_policy_document" "iot_extra_policy" {
+  count = var.extra_iot_policy_statement != null ? 1 : 0
+  dynamic "statement" {
+    for_each = var.extra_iot_policy_statement != null ? var.extra_iot_policy_statement : []
+    content {
+      effect    = lookup(statement.value, "effect", "Allow")
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
+}
+resource "aws_iot_policy" "extra_policy" {
+  count = var.extra_iot_policy_statement != null ? 1 : 0
+  name   = "${var.things_name}-extra-policy"
+  policy = data.aws_iam_policy_document.iot_extra_policy.json
+}
+
+resource "aws_iot_policy_attachment" "extra_policy_attachment" {
+  count = var.extra_iot_policy_statement != null ? 1 : 0
+  policy = aws_iot_policy.extra_policy.name
+  target = aws_iot_certificate.this.arn
+}
+
 # Greengrass Core Role & Role Alias
 resource "aws_iam_role" "role" {
   name               = "${var.things_name}-role"
