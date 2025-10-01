@@ -130,13 +130,13 @@ data "aws_iam_policy_document" "iot_extra_policy" {
 resource "aws_iot_policy" "extra_policy" {
   count = var.extra_iot_policy_statement != null ? 1 : 0
   name   = "${var.things_name}-extra-policy"
-  policy = data.aws_iam_policy_document.iot_extra_policy.json
+  policy = data.aws_iam_policy_document.iot_extra_policy[0].json
 }
 
 resource "aws_iot_policy_attachment" "extra_policy_attachment" {
   count = var.extra_iot_policy_statement != null ? 1 : 0
-  policy = aws_iot_policy.extra_policy.name
-  target = aws_iot_certificate.this.arn
+  policy = aws_iot_policy.extra_policy[0].name
+  target = aws_iot_certificate.this[0].arn
 }
 
 # Greengrass Core Role & Role Alias
