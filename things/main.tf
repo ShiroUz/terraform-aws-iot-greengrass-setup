@@ -89,6 +89,7 @@ data "aws_iam_policy_document" "iot_base_policy" {
     actions = [
       "greengrass:ResolveComponentCandidates",
       "greengrass:GetComponentVersionArtifact",
+      "greengrass:ListThingGroupsForCoreDevice",
     ]
     resources = ["*"]
     effect    = "Allow"
