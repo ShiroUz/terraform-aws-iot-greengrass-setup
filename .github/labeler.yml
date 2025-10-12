@@ -1,0 +1,166 @@
+# Configuration for actions/labeler
+# Automatically label PRs based on changed files and patterns
+
+# Features
+feat:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.tf', '**/*.hcl']
+  - head-branch: ['^feat/', 'feature/']
+  - title: ['^feat(\(.+\))?:', '^feature(\(.+\))?:']
+
+feature:
+  - head-branch: ['^feat/', 'feature/']
+  - title: ['^feat(\(.+\))?:', '^feature(\(.+\))?:']
+
+enhancement:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.tf', '**/*.hcl']
+  - title: ['^feat(\(.+\))?:', '^enhance(\(.+\))?:']
+
+# Bug Fixes
+fix:
+  - head-branch: ['^fix/', 'bugfix/']
+  - title: ['^fix(\(.+\))?:']
+
+bug:
+  - head-branch: ['^fix/', 'bugfix/', 'bug/']
+  - title: ['^fix(\(.+\))?:', '^bug(\(.+\))?:']
+
+bugfix:
+  - head-branch: ['^fix/', 'bugfix/']
+  - title: ['^fix(\(.+\))?:']
+
+# Documentation
+docs:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
+      - '.github/**/*.md'
+  - head-branch: ['^docs/', 'documentation/']
+  - title: ['^docs(\(.+\))?:']
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.md', 'docs/**/*']
+  - head-branch: ['^docs/', 'documentation/']
+  - title: ['^docs(\(.+\))?:']
+
+# Maintenance & Chores
+chore:
+  - head-branch: ['^chore/']
+  - title: ['^chore(\(.+\))?:']
+
+maintenance:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+      - '.gitignore'
+      - '.editorconfig'
+      - 'Makefile'
+  - title: ['^chore(\(.+\))?:', '^maint(\(.+\))?:']
+
+# Refactoring
+refactor:
+  - head-branch: ['^refactor/']
+  - title: ['^refactor(\(.+\))?:']
+
+refactoring:
+  - head-branch: ['^refactor/']
+  - title: ['^refactor(\(.+\))?:']
+
+# Performance
+perf:
+  - head-branch: ['^perf/', 'performance/']
+  - title: ['^perf(\(.+\))?:']
+
+performance:
+  - head-branch: ['^perf/', 'performance/']
+  - title: ['^perf(\(.+\))?:']
+
+# Tests
+test:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'examples/**/*'
+      - '**/*_test.tf'
+      - 'tests/**/*'
+  - head-branch: ['^test/']
+  - title: ['^test(\(.+\))?:']
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: ['examples/**/*', '**/*_test.tf', 'tests/**/*']
+  - title: ['^test(\(.+\))?:']
+
+# CI/CD
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*'
+      - '.github/actions/**/*'
+  - head-branch: ['^ci/']
+  - title: ['^ci(\(.+\))?:']
+
+# Security
+security:
+  - head-branch: ['^security/', 'sec/']
+  - title: ['^security(\(.+\))?:', '^sec(\(.+\))?:']
+
+# Breaking Changes
+breaking:
+  - title: ['^.*!:', 'BREAKING CHANGE', 'breaking change']
+  - body: ['BREAKING CHANGE', 'breaking change']
+
+breaking-change:
+  - title: ['^.*!:', 'BREAKING CHANGE']
+  - body: ['BREAKING CHANGE']
+
+# Dependencies
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'versions.tf'
+      - '**/versions.tf'
+      - '.terraform.lock.hcl'
+
+# Configuration
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.json'
+      - '**/*.hcl'
+      - '.editorconfig'
+      - '.gitignore'
+
+# Module Specific Labels
+terraform:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.tf', '**/*.tfvars']
+
+iot:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'main.tf'
+      - 'things/**/*'
+      - 'parent/**/*'
+
+greengrass:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'main.tf'
+      - 'things/**/*'
+
+examples:
+  - changed-files:
+    - any-glob-to-any-file: 'examples/**/*'
+
+variables:
+  - changed-files:
+    - any-glob-to-any-file: ['**/variable*.tf', '**/variables.tf']
+
+outputs:
+  - changed-files:
+    - any-glob-to-any-file: '**/outputs.tf'

@@ -186,6 +186,35 @@ Latest release information can be found at [Releases](https://github.com/ShiroUz
 - Setting `things_amount` to 0 will not create any Thing-related resources
 - Always specify a tag or version when referencing this module in production
 
+## Releasing
+
+This module uses automated semantic versioning for releases.
+
+### Automatic Releases (Recommended)
+
+Releases are automatically created when changes are merged to the `main` branch, based on commit messages following [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` triggers a **minor** version bump (e.g., 1.0.0 → 1.1.0)
+- `fix:` triggers a **patch** version bump (e.g., 1.0.0 → 1.0.1)
+- `BREAKING CHANGE:` in commit body triggers a **major** version bump (e.g., 1.0.0 → 2.0.0)
+
+Example commit messages:
+```bash
+feat: add support for custom certificates
+fix: correct IAM policy permissions
+feat!: change variable names (BREAKING CHANGE)
+```
+
+### Manual Releases
+
+You can also create releases manually through GitHub Actions:
+
+1. Go to **Actions** → **Tag Release**
+2. Click **Run workflow**
+3. Enter the version number (e.g., 1.0.0)
+4. Select release type (major/minor/patch)
+5. Click **Run workflow**
+
 ## Development
 
 ### Prerequisites
@@ -216,6 +245,14 @@ make docs
 # Run all checks
 make all
 ```
+
+### CI/CD
+
+This project includes GitHub Actions workflows for:
+
+- **CI**: Runs on PRs and pushes to validate Terraform code
+- **Release**: Automatically creates releases based on conventional commits
+- **Tag Release**: Manual workflow for creating releases
 
 ## Contributing
 
