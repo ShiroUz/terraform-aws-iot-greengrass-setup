@@ -1,6 +1,11 @@
 # AWS IoT Greengrass Setup Terraform Module
 
-A Terraform module for setting up AWS IoT Core and AWS IoT Greengrass infrastructure.
+[![Terraform Version](https://img.shields.io/badge/terraform-%3E%3D1.5.7-blue.svg)](https://www.terraform.io/downloads.html)
+[![AWS Provider](https://img.shields.io/badge/AWS%20Provider-%3E%3D6.5-orange.svg)](https://registry.terraform.io/providers/hashicorp/aws/latest)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
+A Terraform module for setting up AWS IoT Core and AWS IoT Greengrass infrastructure with best practices.
 
 ## Features
 
@@ -27,11 +32,11 @@ terraform-aws-iot-greengrass-setup/
 
 ## Usage
 
-### Git Repository Reference
+### Basic Example
 
 ```hcl
 module "iot_greengrass" {
-  source = "git::https://github.com/your-org/terraform-aws-iot-greengrass-setup.git?ref=v1.0.0"
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.0"
 
   # Thing Group configuration
   thing_group_parent_name = "production-devices"
@@ -48,18 +53,25 @@ module "iot_greengrass" {
   things_amount    = 3
 
   # Greengrass configuration
-  component_artifact_location = "arn:aws:s3:::my-greengrass-bucket"
+  component_artifact_location = "arn:aws:s3:::my-greengrass-bucket/*"
+
   # Environment configuration
   region = "ap-northeast-1"
   env    = "prod"
 }
 ```
 
-### HCP Terraform Registry (Planned)
+### Complete Example
+
+See the [complete example](./examples/complete) for a full configuration including custom policies and additional features.
+
+### Using with Terraform Registry (Future)
+
+Once published to the Terraform Registry:
 
 ```hcl
 module "iot_greengrass" {
-  source  = "your-org/iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "~> 1.0"
 
   # Same configuration as above
@@ -129,27 +141,95 @@ module "iot_greengrass" {
 - `aws_iam_policy`
 - `aws_iam_role_policy_attachment`
 
+## Examples
+
+- [Complete](./examples/complete) - Complete example with custom policies and all features
+
 ## Requirements
 
-- Terraform >= 1.13
-- AWS Provider >= 6.0
-- Proper AWS credentials configuration
+| Name | Version |
+|------|---------|
+| terraform | >= 1.5.7 |
+| aws | >= 6.5 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | >= 6.5 |
+
+## Prerequisites
+
+- AWS credentials properly configured
+- S3 bucket for Greengrass component artifacts (if using Greengrass deployments)
+- Appropriate IAM permissions to create:
+  - IoT Things, Thing Groups, Certificates, Policies
+  - IAM Roles and Policies
+  - Systems Manager Parameters
 
 ## Version Management
 
 This module follows [Semantic Versioning](https://semver.org/).
 
-- Major version: Breaking changes
-- Minor version: New features
-- Patch version: Bug fixes
+- **Major version**: Breaking changes
+- **Minor version**: New features (backward compatible)
+- **Patch version**: Bug fixes
 
-Latest release information can be found at [Releases](https://github.com/your-org/terraform-aws-iot-greengrass-setup/releases).
+Latest release information can be found at [Releases](https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases).
 
 ## Important Notes
 
-- The `./parent` directory is intended to be executed separately
-- Role Alias and IAM role are created as shared resources when the first Thing instance is created
-- Certificates are stored encrypted in AWS Systems Manager Parameter Store
+- The `./parent` directory contains a separate submodule for creating parent Thing Groups independently
+- Role Alias and IAM role are created as shared resources when the first Thing is created
+- All subsequent Things reuse the same Role Alias and IAM Role
+- Certificates are stored encrypted in AWS Systems Manager Parameter Store with path: `/greengrass/${env}/${thing_name}/`
 - Setting `things_amount` to 0 will not create any Thing-related resources
-- Always specify a tag or commit hash when referencing Git repositories
-- After HCP Terraform Registry registration, use version constraints to prevent unexpected changes
+- Always specify a tag or version when referencing this module in production
+
+## Development
+
+### Prerequisites
+
+- [Terraform](https://www.terraform.io/downloads.html) >= 1.5.7
+- [terraform-docs](https://terraform-docs.io/) >= 0.16
+- [TFLint](https://github.com/terraform-linters/tflint) >= 0.44
+- [pre-commit](https://pre-commit.com/) >= 3.0
+
+### Setup
+
+```bash
+# Install pre-commit hooks
+make pre-commit-install
+
+# Format code
+make fmt
+
+# Validate configuration
+make validate
+
+# Run linting
+make lint
+
+# Generate documentation
+make docs
+
+# Run all checks
+make all
+```
+
+## Contributing
+
+Contributions are welcome! Please ensure:
+
+1. Code is formatted with `terraform fmt`
+2. All pre-commit hooks pass
+3. Documentation is updated (automatically generated with terraform-docs)
+4. Examples are provided for new features
+
+## License
+
+Apache 2.0 Licensed. See [LICENSE](./LICENSE) for full details.
+
+## Authors
+
+Created and maintained by [ShiroUz](https://github.com/ShiroUz).

@@ -26,5 +26,5 @@ module "things" {
   extra_policy_statement      = var.extra_policy_statement
   extra_iot_policy_statement  = var.extra_iot_policy_statement
 
-  depends_on = [ aws_iot_thing_group.child ]
+  depends_on = [aws_iot_thing_group.child]
 }
