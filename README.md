@@ -21,13 +21,41 @@ A Terraform module for setting up AWS IoT Core and AWS IoT Greengrass infrastruc
 
 ```
 terraform-aws-iot-greengrass-setup/
-├── main.tf              # Main resources (Thing Groups)
-├── variable.tf          # Input variable definitions
-├── outputs.tf           # Output value definitions
-└── things/              # Things submodule
-    ├── main.tf          # Things, certificates, policies, Role Alias
-    ├── variables.tf     # Submodule variables
-    └── outputs.tf       # Submodule outputs
+├── .github/
+│   ├── ISSUE_TEMPLATE/          # Issue templates
+│   ├── workflows/               # GitHub Actions workflows
+│   │   ├── ci.yml              # CI validation
+│   │   ├── labeler.yml         # Auto-labeling PRs
+│   │   ├── pr-title-check.yml  # PR title validation
+│   │   ├── release-drafter.yml # Draft releases
+│   │   └── tag-release.yml     # Manual releases
+│   ├── labeler.yml             # Labeler configuration
+│   ├── release-drafter.yml     # Release notes configuration
+│   └── PULL_REQUEST_TEMPLATE.md
+├── examples/
+│   └── complete/               # Complete usage example
+├── parent/                     # Parent Thing Group submodule
+│   ├── main.tf
+│   ├── variables.tf
+│   └── outputs.tf
+├── things/                     # Things submodule
+│   ├── main.tf                # Things, certificates, policies, Role Alias
+│   ├── variables.tf
+│   └── outputs.tf
+├── main.tf                     # Main resources (Child Thing Group)
+├── variable.tf                 # Input variable definitions
+├── outputs.tf                  # Output value definitions
+├── versions.tf                 # Provider version constraints
+├── .gitignore
+├── .editorconfig
+├── .pre-commit-config.yaml
+├── .tflint.hcl
+├── .releaserc.json
+├── Makefile
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── LICENSE
+└── README.md
 ```
 
 ## Usage
@@ -35,13 +63,23 @@ terraform-aws-iot-greengrass-setup/
 ### Basic Example
 
 ```hcl
+data "aws_caller_identity" "self" {}
+
+# Step 1: Create parent Thing Group using the parent submodule
+module "gg_parent" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git//parent?ref=v1.0.0"
+
+  thing_group_parent_name = "production-devices-parent"
+}
+
+# Step 2: Create child Thing Groups and Things
 module "iot_greengrass" {
   source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.0"
 
   # Thing Group configuration
-  thing_group_parent_name = "production-devices"
-  thing_group_child_name  = "sensors"
-  description             = "IoT sensor devices"
+  thing_group_parent_name = "production-devices-parent"
+  thing_group_child_name  = "sensors-child"
+  description             = "Production IoT sensor devices"
   thing_group_attributes = {
     Environment = "production"
     Team        = "iot-team"
@@ -53,11 +91,95 @@ module "iot_greengrass" {
   things_amount    = 3
 
   # Greengrass configuration
-  component_artifact_location = "arn:aws:s3:::my-greengrass-bucket/*"
+  component_artifact_location = "arn:aws:s3:::my-greengrass-bucket-${data.aws_caller_identity.self.account_id}"
 
   # Environment configuration
   region = "ap-northeast-1"
   env    = "prod"
+
+  depends_on = [module.gg_parent]
+}
+```
+
+### Multiple Device Groups Example
+
+For managing multiple device groups with different configurations:
+
+```hcl
+data "aws_caller_identity" "self" {}
+
+locals {
+  env = {
+    environment = "dev"
+    project     = "iot-monitoring"
+    region      = "ap-northeast-1"
+  }
+
+  greengrass = {
+    weather-sensor = {
+      extra_policy_statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "s3:GetObject",
+            "s3:PutObject"
+          ]
+          Resource = "arn:aws:s3:::weather-data-bucket/*"
+        }
+      ]
+      extra_iot_policy_statement = [
+        {
+          Effect = "Allow"
+          Action = ["iot:Publish"]
+          Resource = ["arn:aws:iot:ap-northeast-1:*:topic/weather/*"]
+        }
+      ]
+    }
+    led-controller = {
+      extra_policy_statement     = []
+      extra_iot_policy_statement = []
+    }
+  }
+}
+
+# Create parent Thing Group
+module "gg_parent" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git//parent?ref=v1.0.0"
+
+  thing_group_parent_name = "${local.env.environment}-${local.env.project}-parent"
+}
+
+# Create multiple child groups with for_each
+module "iot_greengrass" {
+  source   = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.0"
+  for_each = { for k, v in try(local.greengrass, {}) : k => v }
+
+  # Thing Group configuration
+  thing_group_parent_name = "${local.env.environment}-${local.env.project}-parent"
+  thing_group_child_name  = "${local.env.environment}-${local.env.project}-${each.key}-child"
+  description             = "Device Group for ${each.key}"
+  thing_group_attributes = {
+    Environment = local.env.environment
+    Project     = local.env.project
+    SubSID      = each.key
+  }
+
+  # Custom policies per device group
+  extra_policy_statement     = each.value.extra_policy_statement
+  extra_iot_policy_statement = each.value.extra_iot_policy_statement
+
+  # Things configuration
+  things_base_name = "${local.env.environment}-${local.env.project}-${each.key}"
+  things_amount    = 1
+
+  # Greengrass configuration
+  component_artifact_location = "arn:aws:s3:::${local.env.environment}-${local.env.project}-components-${data.aws_caller_identity.self.account_id}"
+
+  # Environment configuration
+  region = local.env.region
+  env    = local.env.environment
+
+  depends_on = [module.gg_parent]
 }
 ```
 
@@ -248,11 +370,97 @@ make all
 
 ### CI/CD
 
-This project includes GitHub Actions workflows for:
+This project includes GitHub Actions workflows for automation:
 
-- **CI**: Runs on PRs and pushes to validate Terraform code
-- **Release**: Automatically creates releases based on conventional commits
-- **Tag Release**: Manual workflow for creating releases
+#### Pull Request Management
+
+**Labeler** (`.github/workflows/labeler.yml`)
+- **Triggers**: Pull request opened, synchronize, or reopened
+- **Purpose**: Automatically label PRs based on changed files, branch names, and PR titles
+- **Features**:
+  - File-based labeling (e.g., `*.tf` → `terraform`, `*.md` → `docs`)
+  - Branch-based labeling (e.g., `feat/*` → `feat`, `fix/*` → `fix`)
+  - Title-based labeling using Conventional Commits patterns
+  - Sync labels automatically with configuration updates
+- **Configuration**: `.github/labeler.yml`
+- **Actions Used**: `actions/labeler@v5`
+
+**PR Title Check** (`.github/workflows/pr-title-check.yml`)
+- **Triggers**: Pull request opened, edited, synchronize, or reopened
+- **Purpose**: Validate PR titles follow Conventional Commits format
+- **Features**:
+  - Validates format: `type(scope): description`
+  - Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+  - Allowed scopes: `core`, `iot`, `greengrass`, `things`, `parent`, `examples`, `ci`, `deps` (optional)
+  - Subject pattern validation (must start with lowercase)
+  - Prevents merge if title format is invalid
+- **Actions Used**: `amannn/action-semantic-pull-request@v5`
+
+#### Release Management
+
+**Release Drafter** (`.github/workflows/release-drafter.yml`)
+- **Triggers**:
+  - Push to `main` or `master` branch
+  - Pull request opened, reopened, or synchronize
+- **Purpose**: Automatically maintain draft releases with categorized release notes
+- **Features**:
+  - Auto-categorizes changes by labels:
+    - 🚀 Features (`feat`, `feature`, `enhancement`)
+    - 🐛 Bug Fixes (`fix`, `bugfix`, `bug`)
+    - 📝 Documentation (`docs`, `documentation`)
+    - ⚡ Performance (`perf`, `performance`)
+    - ♻️ Refactoring (`refactor`, `refactoring`)
+    - 🔐 Security (`security`)
+    - ⚠️ Breaking Changes (`breaking`, `breaking-change`)
+    - 🔧 Maintenance (`chore`, `maintenance`)
+  - Auto-labels PRs based on commit messages
+  - Suggests next version number (major/minor/patch)
+  - Updates draft release on each merge to main
+- **Configuration**: `.github/release-drafter.yml`
+- **Actions Used**: `release-drafter/release-drafter@v6`
+
+**Tag Release** (`.github/workflows/tag-release.yml`)
+- **Triggers**: Manual workflow dispatch
+- **Purpose**: Create versioned releases with automated release notes
+- **Inputs**:
+  - `version`: Version number (e.g., 1.0.0, 1.1.0, 2.0.0)
+  - `release_type`: Release type (major, minor, patch)
+- **Features**:
+  - Validates version format (X.Y.Z)
+  - Checks if tag already exists
+  - Identifies previous tag automatically
+  - Creates and pushes git tag
+  - Generates release notes using Release Drafter
+  - Publishes GitHub Release
+  - Updates CHANGELOG.md with release notes
+  - Commits and pushes CHANGELOG updates
+- **Actions Used**: `release-drafter/release-drafter@v6`
+
+#### Workflow Summary
+
+| Workflow | Trigger | Purpose | Output |
+|----------|---------|---------|--------|
+| Labeler | PR opened/updated | Auto-label PRs | PR labels |
+| PR Title Check | PR opened/edited | Validate title format | Pass/Fail status |
+| Release Drafter | Push to main, PR events | Maintain draft release | Draft release notes |
+| Tag Release | Manual | Create versioned release | Git tag, GitHub Release, Updated CHANGELOG |
+
+#### How to Use
+
+**For Contributors:**
+1. Create a branch with conventional naming: `feat/new-feature`, `fix/bug-name`, `docs/update`
+2. Ensure PR title follows format: `type(scope): description`
+3. Labeler will automatically tag your PR
+4. Release Drafter updates the draft release when merged
+
+**For Maintainers:**
+1. Review draft release notes at: `https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases`
+2. When ready to release:
+   - Go to Actions → Tag Release
+   - Enter version number (e.g., 1.2.0)
+   - Select release type (major/minor/patch)
+   - Run workflow
+3. Release is created and CHANGELOG is automatically updated
 
 ## Contributing
 
