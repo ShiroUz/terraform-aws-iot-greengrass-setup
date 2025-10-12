@@ -1,5 +1,33 @@
 ## [Unreleased]
 
+## [1.0.2] - 2025-10-12
+
+## What's Changed
+
+## 🚀 Features
+
+- feat(ci): delete release drafter (#2) @ShiroUz
+
+## 🔧 Maintenance
+
+- revert: release-drafter.yml (#3) @ShiroUz
+- feat(ci): delete release drafter (#2) @ShiroUz
+
+## Installation
+
+```hcl
+module "iot_greengrass" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=1.0.2"
+
+  # Your configuration here
+}
+```
+
+## Full Changelog
+
+**Full Changelog**: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.0...1.0.2
+
+
 ## [1.0.0] - 2025-10-12
 
 ## What's Changed
@@ -54,8 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First stable release
 
-[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.1...v1.0.2
 [1.0.0]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases/tag/v1.0.0
 
-[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.1...v1.0.2
 [1.0.0]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases/tag/v1.0.0
