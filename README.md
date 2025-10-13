@@ -62,6 +62,51 @@ terraform-aws-iot-greengrass-setup/
 
 ### Basic Example
 
+#### HCP Terraform (Terraform Cloud)
+
+```hcl
+data "aws_caller_identity" "self" {}
+
+# Step 1: Create parent Thing Group using the parent submodule
+module "gg_parent" {
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws//parent"
+  version = "~> 1.0"
+
+  thing_group_parent_name = "production-devices-parent"
+}
+
+# Step 2: Create child Thing Groups and Things
+module "iot_greengrass" {
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  version = "~> 1.0"
+
+  # Thing Group configuration
+  thing_group_parent_name = "production-devices-parent"
+  thing_group_child_name  = "sensors-child"
+  description             = "Production IoT sensor devices"
+  thing_group_attributes = {
+    Environment = "production"
+    Team        = "iot-team"
+    Project     = "sensor-monitoring"
+  }
+
+  # Things configuration
+  things_base_name = "sensor-device"
+  things_amount    = 3
+
+  # Greengrass configuration
+  component_artifact_location = "arn:aws:s3:::my-greengrass-bucket-${data.aws_caller_identity.self.account_id}"
+
+  # Environment configuration
+  region = "ap-northeast-1"
+  env    = "prod"
+
+  depends_on = [module.gg_parent]
+}
+```
+
+#### GitHub Source
+
 ```hcl
 data "aws_caller_identity" "self" {}
 
@@ -104,6 +149,90 @@ module "iot_greengrass" {
 ### Multiple Device Groups Example
 
 For managing multiple device groups with different configurations:
+
+#### HCP Terraform (Terraform Cloud)
+
+```hcl
+data "aws_caller_identity" "self" {}
+
+locals {
+  env = {
+    environment = "dev"
+    project     = "iot-monitoring"
+    region      = "ap-northeast-1"
+  }
+
+  greengrass = {
+    weather-sensor = {
+      extra_policy_statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "s3:GetObject",
+            "s3:PutObject"
+          ]
+          Resource = "arn:aws:s3:::weather-data-bucket/*"
+        }
+      ]
+      extra_iot_policy_statement = [
+        {
+          Effect = "Allow"
+          Action = ["iot:Publish"]
+          Resource = ["arn:aws:iot:ap-northeast-1:*:topic/weather/*"]
+        }
+      ]
+    }
+    led-controller = {
+      extra_policy_statement     = []
+      extra_iot_policy_statement = []
+    }
+  }
+}
+
+# Create parent Thing Group
+module "gg_parent" {
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws//parent"
+  version = "~> 1.0"
+
+  thing_group_parent_name = "${local.env.environment}-${local.env.project}-parent"
+}
+
+# Create multiple child groups with for_each
+module "iot_greengrass" {
+  source   = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  version  = "~> 1.0"
+  for_each = { for k, v in try(local.greengrass, {}) : k => v }
+
+  # Thing Group configuration
+  thing_group_parent_name = "${local.env.environment}-${local.env.project}-parent"
+  thing_group_child_name  = "${local.env.environment}-${local.env.project}-${each.key}-child"
+  description             = "Device Group for ${each.key}"
+  thing_group_attributes = {
+    Environment = local.env.environment
+    Project     = local.env.project
+    SubSID      = each.key
+  }
+
+  # Custom policies per device group
+  extra_policy_statement     = each.value.extra_policy_statement
+  extra_iot_policy_statement = each.value.extra_iot_policy_statement
+
+  # Things configuration
+  things_base_name = "${local.env.environment}-${local.env.project}-${each.key}"
+  things_amount    = 1
+
+  # Greengrass configuration
+  component_artifact_location = "arn:aws:s3:::${local.env.environment}-${local.env.project}-components-${data.aws_caller_identity.self.account_id}"
+
+  # Environment configuration
+  region = local.env.region
+  env    = local.env.environment
+
+  depends_on = [module.gg_parent]
+}
+```
+
+#### GitHub Source
 
 ```hcl
 data "aws_caller_identity" "self" {}
@@ -187,9 +316,9 @@ module "iot_greengrass" {
 
 See the [complete example](./examples/complete) for a full configuration including custom policies and additional features.
 
-### Using with Terraform Registry (Future)
+### Terraform Registry
 
-Once published to the Terraform Registry:
+Once published to the Terraform Registry, you can use:
 
 ```hcl
 module "iot_greengrass" {

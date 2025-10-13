@@ -15,9 +15,22 @@
 
 ## Installation
 
+### HCP Terraform (Terraform Cloud)
+
 ```hcl
 module "iot_greengrass" {
-  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=1.0.2"
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  version = "1.0.2"
+
+  # Your configuration here
+}
+```
+
+### GitHub Source
+
+```hcl
+module "iot_greengrass" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.2"
 
   # Your configuration here
 }
@@ -42,9 +55,22 @@ module "iot_greengrass" {
 
 ## Installation
 
+### HCP Terraform (Terraform Cloud)
+
 ```hcl
 module "iot_greengrass" {
-  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=1.0.0"
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  version = "1.0.0"
+
+  # Your configuration here
+}
+```
+
+### GitHub Source
+
+```hcl
+module "iot_greengrass" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.0"
 
   # Your configuration here
 }
