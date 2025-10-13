@@ -69,7 +69,7 @@ data "aws_caller_identity" "self" {}
 
 # Step 1: Create parent Thing Group using the parent submodule
 module "gg_parent" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws//parent"
+  source  = "ShiroUz/iot-greengrass-setup/aws//parent"
   version = "~> 1.0"
 
   thing_group_parent_name = "production-devices-parent"
@@ -77,7 +77,7 @@ module "gg_parent" {
 
 # Step 2: Create child Thing Groups and Things
 module "iot_greengrass" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "~> 1.0"
 
   # Thing Group configuration
@@ -191,7 +191,7 @@ locals {
 
 # Create parent Thing Group
 module "gg_parent" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws//parent"
+  source  = "ShiroUz/iot-greengrass-setup/aws//parent"
   version = "~> 1.0"
 
   thing_group_parent_name = "${local.env.environment}-${local.env.project}-parent"
@@ -199,7 +199,7 @@ module "gg_parent" {
 
 # Create multiple child groups with for_each
 module "iot_greengrass" {
-  source   = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source   = "ShiroUz/iot-greengrass-setup/aws"
   version  = "~> 1.0"
   for_each = { for k, v in try(local.greengrass, {}) : k => v }
 
