@@ -1,5 +1,59 @@
 ## [Unreleased]
 
+## [1.0.3] - 2025-10-13
+
+## What's Changed
+
+## 🚀 Features
+
+- feat(ci): update tag release (#4) @ShiroUz
+
+## 🔧 Maintenance
+
+- feat(ci): update tag release (#4) @ShiroUz
+
+## 📝 Documentation
+
+- feat(ci): update tag release (#4) @ShiroUz
+
+## Installation
+
+```hcl
+module "iot_greengrass" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=1.0.3"
+
+  # Your configuration here
+}
+```
+
+## Full Changelog
+
+**Full Changelog**: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...1.0.3
+
+## Installation
+
+### HCP Terraform (Terraform Cloud)
+
+```hcl
+module "iot_greengrass" {
+  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  version = "1.0.3"
+
+  # Your configuration here
+}
+```
+
+### GitHub Source
+
+```hcl
+module "iot_greengrass" {
+  source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v1.0.3"
+
+  # Your configuration here
+}
+```
+
+
 ## [1.0.2] - 2025-10-12
 
 ## What's Changed
@@ -108,10 +162,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First stable release
 
-[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.1...v1.0.2
 [1.0.0]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases/tag/v1.0.0
 
-[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/v1.0.1...v1.0.2
 [1.0.0]: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/releases/tag/v1.0.0
