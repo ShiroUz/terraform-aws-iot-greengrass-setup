@@ -32,7 +32,7 @@ module "iot_greengrass" {
 
 ```hcl
 module "iot_greengrass" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "1.0.4"
 
   # Your configuration here
@@ -86,7 +86,7 @@ module "iot_greengrass" {
 
 ```hcl
 module "iot_greengrass" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "1.0.3"
 
   # Your configuration here
@@ -123,7 +123,7 @@ module "iot_greengrass" {
 
 ```hcl
 module "iot_greengrass" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "1.0.2"
 
   # Your configuration here
@@ -163,7 +163,7 @@ module "iot_greengrass" {
 
 ```hcl
 module "iot_greengrass" {
-  source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+  source  = "ShiroUz/iot-greengrass-setup/aws"
   version = "1.0.0"
 
   # Your configuration here

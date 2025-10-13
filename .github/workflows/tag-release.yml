@@ -95,7 +95,7 @@ jobs:
 
           \`\`\`hcl
           module "iot_greengrass" {
-            source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+            source  = "ShiroUz/iot-greengrass-setup/aws"
             version = "$VERSION"
 
             # Your configuration here
