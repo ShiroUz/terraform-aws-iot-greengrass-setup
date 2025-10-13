@@ -87,13 +87,42 @@ jobs:
           # Get the release body from the created release
           RELEASE_NOTES=$(gh release view "v$VERSION" --json body -q .body)
 
-          # Create new changelog entry with release notes
+          # Create installation instructions
+          INSTALL_SECTION=$(cat <<EOF
+          ## Installation
+
+          ### HCP Terraform (Terraform Cloud)
+
+          \`\`\`hcl
+          module "iot_greengrass" {
+            source  = "ShiroUz/terraform-aws-iot-greengrass-setup/aws"
+            version = "$VERSION"
+
+            # Your configuration here
+          }
+          \`\`\`
+
+          ### GitHub Source
+
+          \`\`\`hcl
+          module "iot_greengrass" {
+            source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v$VERSION"
+
+            # Your configuration here
+          }
+          \`\`\`
+          EOF
+          )
+
+          # Create new changelog entry with release notes and installation instructions
           {
             echo "## [Unreleased]"
             echo ""
             echo "## [$VERSION] - $DATE"
             echo ""
             echo "$RELEASE_NOTES"
+            echo ""
+            echo "$INSTALL_SECTION"
             echo ""
             tail -n +2 CHANGELOG.md
           } > CHANGELOG.md.new
