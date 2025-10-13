@@ -72,7 +72,7 @@ template: |
 
   ```hcl
   module "iot_greengrass" {
-    source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=$RESOLVED_VERSION"
+    source = "git::https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup.git?ref=v$RESOLVED_VERSION"
 
     # Your configuration here
   }
@@ -80,7 +80,7 @@ template: |
 
   ## Full Changelog
 
-  **Full Changelog**: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
+  **Full Changelog**: https://github.com/ShiroUz/terraform-aws-iot-greengrass-setup/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
 autolabeler:
   - label: 'feat'
