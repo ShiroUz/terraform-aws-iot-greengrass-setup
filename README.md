@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
-A Terraform module for setting up AWS IoT Core and AWS IoT Greengrass infrastructure with best practices.
+A Terraform module for setting up AWS IoT Core and AWS IoT Greengrass infrastructure.
 
 ## Features
 
