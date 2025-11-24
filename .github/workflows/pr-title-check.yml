@@ -10,10 +10,10 @@ permissions:
 jobs:
   check-title:
     name: Check PR Title
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Check PR title follows Conventional Commits
-        uses: amannn/action-semantic-pull-request@v5
+        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 #v6.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -42,12 +42,12 @@ jobs:
             deps
           # Whether to require scope
           requireScope: false
-          # Subject can't be empty and must start with lowercase
-          subjectPattern: ^[a-z].+$
+          # Subject can't be empty and must start with a letter
+          subjectPattern: ^[a-zA-Z].+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"
             doesn't match the configured pattern. Please ensure that the subject
-            starts with a lowercase letter.
+            starts with a letter.
           # Custom message for invalid PR titles
           headerPattern: '^(\w+)(?:\(([a-z\-]+)\))?: (.+)$'
           headerPatternCorrespondence: type, scope, subject
