@@ -1,5 +1,10 @@
 data "aws_caller_identity" "self" {}
 
+locals {
+  has_extra_iot_policy_statement = can(length(var.extra_iot_policy_statement)) && length(var.extra_iot_policy_statement) > 0
+  has_extra_policy_statement     = can(length(var.extra_policy_statement)) && length(var.extra_policy_statement) > 0
+}
+
 # IoT Things
 resource "aws_iot_thing" "this" {
   name            = var.things_name
@@ -117,9 +122,9 @@ resource "aws_iot_thing_principal_attachment" "this" {
 
 # IoT Policy Extra Policy Statement
 data "aws_iam_policy_document" "iot_extra_policy" {
-  count = var.extra_iot_policy_statement != null ? 1 : 0
+  count = local.has_extra_iot_policy_statement ? 1 : 0
   dynamic "statement" {
-    for_each = var.extra_iot_policy_statement != null ? var.extra_iot_policy_statement : []
+    for_each = local.has_extra_iot_policy_statement ? var.extra_iot_policy_statement : []
     content {
       effect    = lookup(statement.value, "effect", "Allow")
       actions   = statement.value.actions
@@ -128,13 +133,13 @@ data "aws_iam_policy_document" "iot_extra_policy" {
   }
 }
 resource "aws_iot_policy" "extra_policy" {
-  count  = var.extra_iot_policy_statement != null ? 1 : 0
+  count  = local.has_extra_iot_policy_statement ? 1 : 0
   name   = "${var.things_name}-extra-policy"
   policy = data.aws_iam_policy_document.iot_extra_policy[0].json
 }
 
 resource "aws_iot_policy_attachment" "extra_policy_attachment" {
-  count  = var.extra_iot_policy_statement != null ? 1 : 0
+  count  = local.has_extra_iot_policy_statement ? 1 : 0
   policy = aws_iot_policy.extra_policy[0].name
   target = aws_iot_certificate.this.arn
 }
@@ -223,15 +228,15 @@ resource "aws_iam_role_policy_attachment" "this" {
 
 # Greengrass Extra Policy Statement
 resource "aws_iam_policy" "extra_greengrass_core_policy" {
-  count  = var.extra_policy_statement != null ? 1 : 0
+  count  = local.has_extra_policy_statement ? 1 : 0
   name   = "${var.things_name}-extra-policy"
   policy = data.aws_iam_policy_document.extra_policy[0].json
 }
 
 data "aws_iam_policy_document" "extra_policy" {
-  count = var.extra_policy_statement != null ? 1 : 0
+  count = local.has_extra_policy_statement ? 1 : 0
   dynamic "statement" {
-    for_each = var.extra_policy_statement != null ? var.extra_policy_statement : []
+    for_each = local.has_extra_policy_statement ? var.extra_policy_statement : []
     content {
       effect    = lookup(statement.value, "effect", "Allow")
       actions   = statement.value.actions
@@ -241,7 +246,7 @@ data "aws_iam_policy_document" "extra_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "extra_policy" {
-  count      = var.extra_policy_statement != null ? 1 : 0
+  count      = local.has_extra_policy_statement ? 1 : 0
   role       = aws_iam_role.role.name
   policy_arn = aws_iam_policy.extra_greengrass_core_policy[0].arn
 }
