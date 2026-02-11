@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "aws-knowledge": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://knowledge-mcp.global.api.aws"]
+    }
+  }
+}
